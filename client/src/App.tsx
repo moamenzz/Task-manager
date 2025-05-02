@@ -6,8 +6,9 @@ import EmailVerificationPage from "./pages/EmailVerificationPage";
 import { setNavgiate } from "./lib/navigation";
 import { ToastContainer } from "react-toastify";
 import AppContainer from "./components/AppContainer";
-import HomePage from "./pages/HomePage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import MainLayout from "./layouts/MainLayout";
+import TasksPage from "./pages/TasksPage";
 
 function App() {
   const navgiate = useNavigate();
@@ -16,7 +17,9 @@ function App() {
     <>
       <Routes>
         <Route element={<AppContainer />}>
-          <Route index element={<HomePage />} />
+          <Route element={<MainLayout />}>
+            <Route index element={<TasksPage />} />
+          </Route>
         </Route>
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />

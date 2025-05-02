@@ -10,7 +10,7 @@ import SessionModel from "../models/session.model";
 import UserModel from "../models/user.model";
 import VerificationModel from "../models/verification.model";
 import appAssert from "../utils/AppAssert";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import {
   accessTokenSignOptions,
   RefreshTokenPayload,

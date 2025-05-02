@@ -11,6 +11,7 @@ import userRouter from "./routes/user.route";
 import authenticate from "./middleware/authenticate";
 import session from "express-session";
 import passport from "./config/passport";
+import taskRouter from "./routes/task.route";
 
 const port: String | Number = PORT || 3000;
 
@@ -38,6 +39,7 @@ app.use(passport.session());
 
 app.use("/auth", authRouter);
 app.use("/user", authenticate, userRouter);
+app.use("/task", authenticate, taskRouter);
 
 app.use(errorHandler);
 
