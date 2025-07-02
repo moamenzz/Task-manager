@@ -58,3 +58,23 @@ export const resetPasswordSchema = z
 
 export const codeSchema = z.string().min(1).max(255);
 export const emailSchema = z.string().email().min(1).max(255);
+
+export const editProfileSchema = z.object({
+  avatar: z.string().optional(),
+  email: z.string().email().max(255).optional(),
+  username: z
+    .string()
+    .min(6, "Username must be at least 6 characters")
+    .max(30, "Username cannot exceed 30 characters")
+    .optional(),
+  password: z
+    .string()
+    .min(6, "Password must be at least 6 characters")
+    .max(100, "Password cannot exceed 100 characters"),
+  newPassword: z
+    .string()
+    .min(6, "Password must be at least 6 characters")
+    .max(100, "Password cannot exceed 100 characters")
+    .optional(),
+  userAgent: z.string().optional(),
+});

@@ -28,10 +28,14 @@ const ProfileModal = ({ isOpen, onOpenChange, user }: ProfileModalProps) => {
     verified: user.verified,
   });
 
-  const { mutate: editUserProfileMutation, isPending } = useMutation({
+  const {
+    mutate: editUserProfileMutation,
+    isPending,
+    error,
+  } = useMutation({
     mutationFn: editUserProfile,
     onError: () => {
-      toast.error("Failed to edit user profile");
+      toast.error(error?.message || "Failed to edit user profile");
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["user"] });
@@ -51,12 +55,12 @@ const ProfileModal = ({ isOpen, onOpenChange, user }: ProfileModalProps) => {
         <DialogTitle className="text-xl font-semibold">
           Edit User Profile
         </DialogTitle>
-        <div className="fixed left-0 top-0 z-50 h-full w-full bg-[#333]/30 overflow-hidden">
-          <div className="py-5 px-6 max-w-[520px] w-full flex flex-col gap-3 bg-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-md border-2 border-white">
+        <div className="bg-[#333]/30">
+          <div className="py-5 px-6 w-full flex flex-col gap-3 bg-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-md border-2 border-white">
             <div className="absolute left-0 top-0 w-full h-[80px] bg-[#323232]/10 rounded-tr-md rounded-tl-md"></div>
 
             <div className="mt-4 relative flex justify-between">
-              <div className="relative inline-block w-80 h-80">
+              <div className="relative inline-block w-20 h-20">
                 <img
                   src={user.avatar || "/logo.png"}
                   alt={user.username}
@@ -64,19 +68,19 @@ const ProfileModal = ({ isOpen, onOpenChange, user }: ProfileModalProps) => {
                 />
                 <div className="absolute bottom-0 right-1 shadow-sm">
                   <span className="text-lg text-blue-400">
-                    {<MdOutlineVerified size={10} />}
+                    {<MdOutlineVerified size={20} />}
                   </span>
                   <span className="absolute z-20 left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] text-xs text-white">
-                    {<MdOutlineVerified size={10} />}{" "}
+                    {<MdOutlineVerified size={20} fill="blue" />}
                   </span>
                 </div>
               </div>
               <div className="self-end flex items-center gap-2">
                 <button className="flex items-center gap-2 border-2 border-[#323232]/10 rounded-md py-1 px-3 text-xs font-medium text-[#323232]">
-                  {<FaGithub size={10} />} Github
+                  {<FaGithub size={20} />} Github
                 </button>
                 <button className="flex items-center gap-2 border-2 border-[#323232]/10 rounded-md py-1 px-3 text-xs font-medium text-[#323232]">
-                  {<MdOutlineVerified size={10} />} Verified
+                  {<MdOutlineVerified size={20} />} Verified
                 </button>
               </div>
             </div>
@@ -93,13 +97,13 @@ const ProfileModal = ({ isOpen, onOpenChange, user }: ProfileModalProps) => {
               }}
             >
               <div className="pt-2 grid grid-cols-[150px_1fr]">
-                <label htmlFor="name" className="text-sm font-medium">
+                <label htmlFor="username" className="text-sm font-medium">
                   Username
                 </label>
                 <input
                   type="text"
-                  id="name"
-                  name="name"
+                  id="username"
+                  name="username"
                   value={formData.username}
                   onChange={handleInputChange}
                   className="py-[0.4rem] px-3 font-medium rounded-lg border-2 border-[#323232]/10"
@@ -120,19 +124,20 @@ const ProfileModal = ({ isOpen, onOpenChange, user }: ProfileModalProps) => {
                     className="w-full py-[0.4rem] pl-9 pr-2 font-medium rounded-lg border-2 border-[#323232]/10"
                   />
                   <span className="absolute left-0 top-0 bottom-0 flex items-center px-3 text-[#323232]/50">
-                    {<IoIosMail size={10} />}
+                    {<IoIosMail size={20} />}
                   </span>
                 </div>
               </div>
 
               <div className="pt-4 grid grid-cols-2 gap-4 border-t-2 border-t-[#323232]/10">
                 <div className="flex flex-col gap-1">
-                  <label htmlFor="oldPassWord" className="text-sm font-medium">
-                    Old Password
+                  <label htmlFor="password" className="text-sm font-medium">
+                    Current Password
                   </label>
                   <input
                     type="password"
-                    id="oldPassword"
+                    id="password"
+                    name="password"
                     value={formData.password}
                     onChange={handleInputChange}
                     className="py-[0.4rem] px-3 font-medium rounded-lg border-2 border-[#323232]/10"
@@ -146,6 +151,7 @@ const ProfileModal = ({ isOpen, onOpenChange, user }: ProfileModalProps) => {
                   <input
                     type="password"
                     id="newPassword"
+                    name="newPassword"
                     value={formData.newPassword}
                     onChange={handleInputChange}
                     className="py-[0.4rem] px-3 font-medium rounded-lg border-2 border-[#323232]/10"
@@ -156,8 +162,9 @@ const ProfileModal = ({ isOpen, onOpenChange, user }: ProfileModalProps) => {
               <div className="flex justify-end gap-4 border-t-2 border-t-[#323232]/10">
                 <button
                   className="mt-3 py-2 px-4 bg-transparent text-black text-sm font-medium rounded-md border-2 border-[#323232]/10
-                hover:bg-[#EB4E31] hover:border-transparent hover:text-white transition-all duration-300"
+                hover:bg-[#EB4E31] hover:border-transparent hover:text-white transition-all duration-300 cursor-pointer"
                   disabled={isPending}
+                  onClick={() => onOpenChange(false)}
                 >
                   Cancel
                 </button>
@@ -165,7 +172,7 @@ const ProfileModal = ({ isOpen, onOpenChange, user }: ProfileModalProps) => {
                   type="submit"
                   disabled={isPending}
                   className={`mt-3 py-2 px-4 bg-[#3aafae] text-white text-sm font-medium rounded-md
-                hover:bg-[#2e8d8c]/90 transition-all duration-300 ${
+                hover:bg-[#2e8d8c]/90 transition-all duration-300 cursor-pointer ${
                   isPending && "opacity-50"
                 }`}
                 >

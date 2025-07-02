@@ -37,8 +37,6 @@ function RadialChart() {
     queryClient.getQueryData<Task[]>(["completed-tasks"]) || [];
   const pendingTasks =
     queryClient.getQueryData<Task[]>(["pending-tasks"]) || [];
-  const overdueTasks =
-    queryClient.getQueryData<Task[]>(["overdue-tasks"]) || [];
 
   const chartData = [
     {
