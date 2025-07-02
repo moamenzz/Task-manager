@@ -13,7 +13,7 @@ export interface AccessTokenPayload extends RefreshTokenPayload {
 }
 
 const defaults: SignOptions = {
-  audience: ["user"],
+  audience: "user",
 };
 
 interface SignOptionsAndSecret extends SignOptions {
@@ -51,8 +51,7 @@ export const verifyToken = <TPayload extends object>(
 ) => {
   const { secret, ...verifyOpts } = verifyOptions;
   const payload = jwt.verify(token, secret, {
-    ...defaults,
     ...verifyOpts,
-  }) as TPayload;
+  }) as unknown as TPayload;
   return { payload };
 };
