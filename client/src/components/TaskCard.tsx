@@ -74,6 +74,7 @@ const TaskCard: FC<TaskItemProps> = ({ task }) => {
     onError: (err, _, context) => {
       queryClient.setQueryData<Task[]>(["all-tasks"], context?.previousTasks);
       toast.error("Failed to complete task");
+      console.log(err);
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["all-tasks"] });
