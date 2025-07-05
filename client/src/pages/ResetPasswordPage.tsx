@@ -1,11 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { FaLock, FaRedo } from "react-icons/fa";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { resetPassword } from "../lib/apiRoutes";
-import Input from "../components/Input";
 import { useState } from "react";
-import Button from "../components/Button";
-import ErrorThrower from "../components/ErrorThrower";
+import Loader from "@/components/Loader";
+import ErrorThrower from "@/components/ErrorThrower";
+import Input from "@/components/Input";
+import { IoEye, IoEyeOff } from "react-icons/io5";
 
 const ResetPasswordPage = () => {
   const navigate = useNavigate();
@@ -14,11 +14,15 @@ const ResetPasswordPage = () => {
   const [formData, setFormData] = useState({
     password: "",
     confirmPassword: "",
+    code: code ? code : "",
   });
-  const handleChangeInput = (e: React.FormEvent<HTMLInputElement>) => {
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleInputChange = (e: React.FormEvent<HTMLInputElement>) => {
     const { name, value } = e.currentTarget;
     setFormData({ ...formData, [name]: value });
   };
+
   const {
     mutate: resetPasswordMutation,
     isPending,
@@ -30,88 +34,87 @@ const ResetPasswordPage = () => {
       navigate("/login");
     },
   });
+
+  const handleSubmitForm = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    resetPasswordMutation(formData);
+  };
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-700 to-black text-white flex flex-col items-center">
-      {/* Header */}
-      <div className="w-full p-8 flex justify-center">
-        <div className="flex items-center">
-          <svg
-            className="w-10 h-10 text-white fill-current"
-            viewBox="0 0 24 24"
-          >
-            <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.8-.179-.92-.6-.12-.418.18-.8.6-.92 4.56-1.021 8.52-.6 11.64 1.32.42.18.48.659.24 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.24 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" />
-          </svg>
-          <span className="ml-2 text-2xl font-bold">Spotify</span>
-        </div>
-      </div>
+    <div className="flex justify-center items-center min-h-full">
+      <form
+        onSubmit={handleSubmitForm}
+        className="ml-0 mt-0 m-[2rem] px-10 py-14 rounded-lg bg-white max-w-[520px] w-full"
+      >
+        <div className="relative z-10">
+          <h1 className="mb-2 text-center text-[1.35rem] font-medium">
+            Reset Your Password
+          </h1>
 
-      {/* Main Content */}
-      <div className="w-full max-w-md bg-neutral-900 p-8 rounded-lg shadow-lg">
-        <h1 className="text-3xl font-bold text-center mb-8">
-          Recover your password
-        </h1>
+          <div className="relative">
+            <label htmlFor="password" className="mb-1 text-[#999]">
+              New Password
+            </label>
+            <Input
+              id="password"
+              type={showPassword ? "text" : "password"}
+              name="password"
+              value={formData.password}
+              onChange={handleInputChange}
+              className="px-4 py-3 border-[2px] rounded-md outline-[#2ECC71] text-gray-800"
+              placeholder="New Password"
+              required
+            />
 
-        <div className="relative my-8">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-700"></div>
+            <div
+              className="absolute right-4 top-[53%] cursor-pointer"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <IoEye size={20} /> : <IoEyeOff size={20} />}
+            </div>
           </div>
-          <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-neutral-900 text-gray-400"></span>
+
+          <div className="relative">
+            <label htmlFor="confirmPassword" className="mb-1 text-[#999]">
+              Confirm Password
+            </label>
+            <Input
+              id="confirmPassword"
+              type="password"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleInputChange}
+              className="px-4 py-3 border-[2px] rounded-md outline-[#2ECC71] text-gray-800"
+              placeholder="Confirm password"
+              required
+            />
+          </div>
+
+          <div className="flex flex-col cursor-pointer">
+            <button
+              type="submit"
+              disabled={
+                isPending ||
+                !formData.password ||
+                !formData.confirmPassword ||
+                formData.password !== formData.confirmPassword
+              }
+              className="mt-[1.5rem] flex-1 px-4 py-3 font-bold bg-[#2ECC71] text-white rounded-md hover:bg-[#1abc9c] transition-colors cursor-pointer"
+            >
+              {isPending ? (
+                <div className="flex justify-center items-center">
+                  <Loader />
+                </div>
+              ) : (
+                "Reset Password"
+              )}
+            </button>
+            {isError && (
+              <ErrorThrower isError={isError} error={error as Error} />
+            )}
           </div>
         </div>
-
-        {/* Form */}
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            resetPasswordMutation({
-              password: formData.password,
-              confirmPassword: formData.confirmPassword,
-              code: code ? code : "",
-            });
-          }}
-        >
-          <Input
-            icon={FaLock}
-            value={formData.password}
-            onChange={handleChangeInput}
-            name="password"
-            type="password"
-            placeholder="Enter New Password"
-          />
-          <Input
-            icon={FaRedo}
-            value={formData.confirmPassword}
-            onChange={handleChangeInput}
-            name="confirmPassword"
-            type="password"
-            placeholder="Confirm New Password"
-          />
-          {isError && <ErrorThrower isError={isError} error={error} />}
-          <Button
-            type="submit"
-            isLoading={isPending}
-            disabled={
-              isPending ||
-              !formData.password ||
-              !formData.confirmPassword ||
-              formData.password !== formData.confirmPassword
-            }
-          >
-            Reset
-          </Button>
-        </form>
-      </div>
-
-      {/* Footer */}
-      <div className="w-full max-w-md mt-8 text-center">
-        <p className="text-gray-400">
-          Back to{" "}
-          <Link to="/login" className="text-white hover:underline">
-            Login?
-          </Link>
-        </p>
-      </div>
+        <img src="/flurry.png" alt="" />
+      </form>
     </div>
   );
 };

@@ -107,10 +107,10 @@ const LoginPage = () => {
               Forgot password?
             </Link>
           </div>
-          <div className="flex">
+          <div className="flex flex-col">
             <button
               type="submit"
-              disabled={!formData.email || !formData.password}
+              disabled={isPending || !formData.email || !formData.password}
               className="mt-[1.5rem] flex-1 px-4 py-3 font-bold bg-[#2ECC71] text-white rounded-md hover:bg-[#1abc9c] transition-colors cursor-pointer"
             >
               {isPending ? (
