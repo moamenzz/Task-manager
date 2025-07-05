@@ -102,7 +102,7 @@ const TasksPage = () => {
             <h1 className="font-bold text-xl px-2 py-1">{activePage}</h1>
           </div>
 
-          <div className="grid grid-cols-4 gap-4">
+          <div className="flex flex-col md:grid md:grid-cols-4 gap-4">
             {tasks?.map((task) => (
               <TaskCard key={task._id} task={task} />
             ))}

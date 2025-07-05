@@ -1,5 +1,5 @@
 import useAuth from "@/hooks/useAuth";
-import { FaGithub, FaMoon, FaUser } from "react-icons/fa";
+import { FaGithub, FaLinkedin, FaUser } from "react-icons/fa";
 
 const Navbar = () => {
   const { user } = useAuth();
@@ -11,7 +11,9 @@ const Navbar = () => {
           <span role="img" aria-label="wave">
             👋
           </span>
-          {user?._id ? `Welcome, ${user.username}!` : "Welcome to Todoist"}
+          {user?._id
+            ? `Welcome, ${user.username}!`
+            : `Welcome to ${import.meta.env.VITE_APP_NAME}`}
         </h1>
         <p className="text-sm">
           {user?._id ? (
@@ -30,7 +32,7 @@ const Navbar = () => {
       <div className="h-[50px] flex items-center gap-[10.4rem]">
         <div className="flex gap-4 items-center">
           <a
-            href="https://github.com/Maclinz/taskfyer"
+            href="https://github.com/moamenzz"
             target="_blank"
             rel="noopener noreferrer"
             className="h-[40px] w-[40px] text-purple-500 rounded-full flex items-center justify-center text-lg border-2 border-[#E6E6E6]"
@@ -38,15 +40,15 @@ const Navbar = () => {
             {<FaGithub size={20} />}
           </a>
           <a
-            href="https://github.com/Maclinz/taskfyer"
+            href="https://www.linkedin.com/in/moamen-muhammed-18a9b7223"
             target="_blank"
             rel="noopener noreferrer"
             className="h-[40px] w-[40px] text-purple-500 rounded-full flex items-center justify-center text-lg border-2 border-[#E6E6E6]"
           >
-            {<FaMoon size={20} />}
+            {<FaLinkedin size={20} />}
           </a>
           <a
-            href="https://github.com/Maclinz/taskfyer"
+            href="https://moamen-muhammed.vercel.app"
             target="_blank"
             rel="noopener noreferrer"
             className="h-[40px] w-[40px] text-purple-500 rounded-full flex items-center justify-center text-lg border-2 border-[#E6E6E6]"

@@ -26,6 +26,8 @@ const TaskModal = ({ isOpen, onOpenChange, task, type }: TaskModalProps) => {
 
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!formData.title || !formData.description || !formData.dueDate)
+      return toast.error("All fields are required");
     if (type === "create") {
       createTaskMutation(formData);
     } else {
@@ -85,6 +87,7 @@ const TaskModal = ({ isOpen, onOpenChange, task, type }: TaskModalProps) => {
     onError: (err, _, context) => {
       queryClient.setQueryData<Task>(["all-tasks"], context?.previousTasks);
       toast.error("Failed to edit task");
+      console.log(err);
     },
     onSuccess: () => {
       onOpenChange(false);
