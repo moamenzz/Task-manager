@@ -7,7 +7,6 @@ import useUIStore from "../stores/useUIStore";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import { useMutation } from "@tanstack/react-query";
 import { deleteAllTasks } from "@/lib/apiRoutes";
-import queryClient from "@/config/queryClient";
 import { toast } from "react-toastify";
 import { JSX } from "react";
 import useAuth from "@/hooks/useAuth";
@@ -19,8 +18,9 @@ const TaskNavbar = () => {
   const { mutate: deleteAllTasksMutation } = useMutation({
     mutationFn: deleteAllTasks,
     onSuccess: () => {
+      toast.success("Deleted all tasks");
       setActivePage("All Tasks");
-      queryClient.invalidateQueries({ queryKey: ["all-tasks"] });
+      window.location.href = "/";
     },
     onError: () => {
       toast.error("Failed to delete all tasks");

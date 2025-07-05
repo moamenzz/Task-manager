@@ -23,6 +23,7 @@ export interface AuthResponse {
   avatar?: string;
   password: string;
   verified: boolean;
+  githubId?: string;
   createdAt?: Date;
   updatedAt?: Date;
   message?: string;

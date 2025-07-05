@@ -1,7 +1,6 @@
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { AuthResponse, editUserProfile } from "@/lib/apiRoutes";
 import { MdOutlineVerified } from "react-icons/md";
-import { IoIosMail } from "react-icons/io";
 import { FaGithub } from "react-icons/fa";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
@@ -69,19 +68,26 @@ const ProfileModal = ({ isOpen, onOpenChange, user }: ProfileModalProps) => {
                 <div className="absolute bottom-0 right-1 shadow-sm">
                   <span className="text-lg text-blue-400">
                     {<MdOutlineVerified size={20} />}
-                  </span>
-                  <span className="absolute z-20 left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] text-xs text-white">
-                    {<MdOutlineVerified size={20} fill="blue" />}
-                  </span>
+                  </span>{" "}
+                  {user.verified && (
+                    <span className="absolute z-20 left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] text-xs text-white">
+                      {<MdOutlineVerified size={20} fill="blue" />}
+                    </span>
+                  )}
                 </div>
               </div>
+
               <div className="self-end flex items-center gap-2">
-                <button className="flex items-center gap-2 border-2 border-[#323232]/10 rounded-md py-1 px-3 text-xs font-medium text-[#323232]">
-                  {<FaGithub size={20} />} Github
-                </button>
-                <button className="flex items-center gap-2 border-2 border-[#323232]/10 rounded-md py-1 px-3 text-xs font-medium text-[#323232]">
-                  {<MdOutlineVerified size={20} />} Verified
-                </button>
+                {user.githubId && (
+                  <button className="flex items-center gap-2 border-2 border-[#323232]/10 rounded-md py-1 px-3 text-xs font-medium text-[#323232]">
+                    {<FaGithub size={20} />} Github
+                  </button>
+                )}
+                {user.verified && (
+                  <button className="flex items-center gap-2 border-2 border-[#323232]/10 rounded-md py-1 px-3 text-xs font-medium text-[#323232]">
+                    {<MdOutlineVerified size={20} />} Verified
+                  </button>
+                )}
               </div>
             </div>
             <div>
@@ -108,25 +114,6 @@ const ProfileModal = ({ isOpen, onOpenChange, user }: ProfileModalProps) => {
                   onChange={handleInputChange}
                   className="py-[0.4rem] px-3 font-medium rounded-lg border-2 border-[#323232]/10"
                 />
-              </div>
-
-              <div className="pt-4 grid grid-cols-[150px_1fr] border-t-2 border-t-[#323232]/10">
-                <label htmlFor="email" className="text-sm font-medium">
-                  Email Address
-                </label>
-                <div className="relative w-full">
-                  <input
-                    type="text"
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className="w-full py-[0.4rem] pl-9 pr-2 font-medium rounded-lg border-2 border-[#323232]/10"
-                  />
-                  <span className="absolute left-0 top-0 bottom-0 flex items-center px-3 text-[#323232]/50">
-                    {<IoIosMail size={20} />}
-                  </span>
-                </div>
               </div>
 
               <div className="pt-4 grid grid-cols-2 gap-4 border-t-2 border-t-[#323232]/10">

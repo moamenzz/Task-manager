@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/chart";
 import queryClient from "@/config/queryClient";
 import { Task } from "@/lib/apiRoutes";
+import calculateTaskCompletion from "@/utils/taskCompletion";
 
 export const description = "A radial chart with stacked sections";
 
@@ -48,7 +49,7 @@ function RadialChart() {
   return (
     <Card className="flex flex-col border-2 border-white shadow-none bg-[#EDEDED]">
       <CardHeader className="items-center pb-0">
-        <CardTitle>Comleted vs Pending Tasks</CardTitle>
+        <CardTitle>Completed vs Pending Tasks</CardTitle>
         <CardDescription>Task completion status.</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-1 items-center pb-0">
@@ -77,7 +78,7 @@ function RadialChart() {
                           y={(viewBox.cy || 0) - 16}
                           className="fill-foreground text-2xl font-bold"
                         >
-                          {tasks.length}
+                          {completedTasks.length}
                         </tspan>
                         <tspan
                           x={viewBox.cx}
@@ -111,7 +112,13 @@ function RadialChart() {
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm">
         <div className="flex items-center gap-2 font-medium leading-none">
-          Task completion improved by 0% this month{" "}
+          Task completion improved by{" "}
+          {calculateTaskCompletion({
+            allTasks: tasks,
+            completedTasks,
+            pendingTasks,
+          })}
+          % this month
           <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">

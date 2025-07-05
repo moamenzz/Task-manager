@@ -64,16 +64,14 @@ export const editProfileSchema = z.object({
   email: z.string().email().max(255).optional(),
   username: z
     .string()
-    .min(6, "Username must be at least 6 characters")
     .max(30, "Username cannot exceed 30 characters")
     .optional(),
   password: z
     .string()
-    .min(6, "Password must be at least 6 characters")
-    .max(100, "Password cannot exceed 100 characters"),
+    .max(100, "Password cannot exceed 100 characters")
+    .optional(),
   newPassword: z
     .string()
-    .min(6, "Password must be at least 6 characters")
     .max(100, "Password cannot exceed 100 characters")
     .optional(),
   userAgent: z.string().optional(),

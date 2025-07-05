@@ -8,7 +8,7 @@ interface UserParams {
   avatar?: string;
   email?: string;
   username?: string;
-  password: string;
+  password?: string;
   newPassword?: string;
 }
 
@@ -20,24 +20,26 @@ export const editUserProfile = async (
   appAssert(user, NOT_FOUND, "User not found");
 
   //   user.avatar = data.avatar;
-  if (data.email !== undefined) {
+  if (data.email) {
     user.email = data.email;
   }
 
-  if (data.username !== undefined) {
+  if (data.username) {
     user.username = data.username;
   }
 
-  if (data.password && data.newPassword) {
+  if (data.password && data.newPassword && data.password !== data.newPassword) {
     appAssert(
       await bcrypt.compare(data.password, user.password),
       BAD_REQUEST,
       "Wrong password"
     );
-  } else {
-    if (data.newPassword !== undefined) {
-      user.password = await bcrypt.hash(data.newPassword, 10);
-    }
+  } else if (
+    data.password &&
+    data.newPassword &&
+    data.password === data.newPassword
+  ) {
+    user.password = await bcrypt.hash(data.newPassword, 10);
   }
 
   await user.save();
