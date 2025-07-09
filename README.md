@@ -1,4 +1,4 @@
-# Spotify Clone
+# Taskify
 
 <div align="center">
 <img src="/client/assets/readme-cover.png" alt="Demo Screenshot">
